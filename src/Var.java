@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,21 +19,21 @@ public class Var implements Expression {
     @Override
     public double evaluate(Map<String, Double> assignment) throws Exception {
         if (!assignment.containsKey(this.name)) {
-            throw new Exception("The variable " + name + "is not assigned.");
+            throw new Exception("The variable " + name + " is not assigned.");
         }
         return assignment.get(this.name);
     }
 
     @Override
     public double evaluate() throws Exception {
-        throw new Exception("The variable " + name + "is not assigned.");
+        return this.evaluate(new HashMap<>());
     }
 
     @Override
     public List<String> getVariables() {
-        List<String> varList = new ArrayList<String>();
-        varList.add(this.name);
-        return varList;
+        List<String> variableList = new ArrayList<>();
+        variableList.add(this.name);
+        return variableList;
     }
 
     @Override
@@ -46,5 +47,23 @@ public class Var implements Expression {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    @Override
+    public Expression differentiate(String var) {
+        if (this.name.equals(var)) {
+            return new Num(1.0);
+        }
+        return new Num(0.0);
+    }
+
+    @Override
+    public Expression simplifyAssumingThereAreVariables() {
+        return this;
+    }
+
+    @Override
+    public Expression simplify() {
+        return this.simplifyAssumingThereAreVariables();
     }
 }

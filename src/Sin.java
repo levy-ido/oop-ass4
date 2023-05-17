@@ -1,4 +1,3 @@
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,33 +7,40 @@ public class Sin extends UnaryExpression implements Expression {
 
     /**
      * Constructs a new Sin with the given expression.
-     * @param e An Expression representing the expression to sine
+     * @param expression An Expression representing the expression to sine
      */
-    public Sin(Expression e) {
-        super(e);
+    public Sin(Expression expression) {
+        super(expression);
     }
     @Override
     public double evaluate(Map<String, Double> assignment) throws Exception {
-        return Math.sin(super.getE().evaluate(assignment));
-    }
-
-    @Override
-    public double evaluate() throws Exception {
-        return Math.sin(super.getE().evaluate());
-    }
-
-    @Override
-    public List<String> getVariables() {
-        return super.getE().getVariables();
+        return Math.sin(Math.toRadians(super.getOperand().evaluate(assignment)));
     }
 
     @Override
     public Expression assign(String var, Expression expression) {
-        return new Sin(super.getE().assign(var, expression));
+        return new Sin(super.getOperand().assign(var, expression));
     }
 
     @Override
     public String toString() {
-        return "sin(" + super.getE().toString() + ")";
+        return "sin(" + super.getOperand().toString() + ")";
+    }
+
+    @Override
+    public Expression differentiate(String var) {
+        Expression operand = super.getOperand();
+        Expression sineDerivative = new Cos(operand);
+        Expression operandDerivative = operand.differentiate(var);
+        return new Mult(sineDerivative, operandDerivative);
+    }
+
+    @Override
+    public Expression simplifyAssumingThereAreVariables() {
+        Expression simplifiedOperand = super.getOperand().simplify();
+        if (simplifiedOperand.toString().equals("0.0")) {
+            return new Num(0.0);
+        }
+        return new Sin(simplifiedOperand);
     }
 }
