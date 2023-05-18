@@ -1,7 +1,7 @@
 import java.util.List;
 
 /**
- * Represents a binary expression.
+ * Represents an expression containing a binary operation.
  */
 public abstract class BinaryExpression extends BaseExpression {
     private final Expression first;
@@ -33,8 +33,8 @@ public abstract class BinaryExpression extends BaseExpression {
     }
 
     /**
-     * Returns this BinaryExpression's variables.
-     * @return A List representing this BinaryExpression's variables
+     * Returns a list of this BinaryExpression's variables.
+     * @return A List of this BinaryExpression's variables
      */
     public List<String> getVariables() {
         List<String> firstVariables = this.first.getVariables();

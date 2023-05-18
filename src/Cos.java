@@ -18,6 +18,11 @@ public class Cos extends UnaryExpression implements Expression {
     }
 
     @Override
+    public double evaluate() throws Exception {
+        return this.evaluate(Map.of());
+    }
+
+    @Override
     public Expression assign(String var, Expression expression) {
         return new Cos(super.getOperand().assign(var, expression));
     }
@@ -36,7 +41,11 @@ public class Cos extends UnaryExpression implements Expression {
     }
 
     @Override
-    public Expression simplifyAssumingThereAreVariables() {
-        return new Cos(super.getOperand().simplify());
+    public Expression simplify() {
+        try {
+            return new Num(this.evaluate());
+        } catch (Exception exception) {
+            return new Cos(super.getOperand().simplify());
+        }
     }
 }

@@ -10,7 +10,7 @@ public class Num implements Expression {
 
     /**
      * Constructs a new Num with the given value.
-     * @param value A double representing the value to construct the new Num with
+     * @param value A double representing the new Num value
      */
     public Num(double value) {
         this.value = value;
@@ -44,11 +44,6 @@ public class Num implements Expression {
     @Override
     public Expression differentiate(String var) {
         return new Num(0.0);
-    }
-
-    @Override
-    public Expression simplifyAssumingThereAreVariables() {
-        return this.simplify();
     }
 
     @Override

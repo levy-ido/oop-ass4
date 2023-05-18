@@ -5,9 +5,9 @@ import java.util.Map;
  */
 public class Mult extends BinaryExpression implements Expression {
     /**
-     * Constructs a new Mult with the given operands.
-     * @param multiplier An Expression representing the new Mult's multiplier
-     * @param multiplicand An Expression representing the new Mult's multiplicand
+     * Constructs a new Mult with the given multiplier and multiplicand.
+     * @param multiplier An Expression representing the new Mult multiplier
+     * @param multiplicand An Expression representing the new Mult multiplicand
      */
     public Mult(Expression multiplier, Expression multiplicand) {
         super(multiplier, multiplicand);
@@ -18,6 +18,11 @@ public class Mult extends BinaryExpression implements Expression {
         double multiplierEvaluation = super.getFirst().evaluate(assignment);
         double multiplicandEvaluation = super.getSecond().evaluate(assignment);
         return multiplierEvaluation * multiplicandEvaluation;
+    }
+
+    @Override
+    public double evaluate() throws Exception {
+        return this.evaluate(Map.of());
     }
 
     @Override
@@ -36,26 +41,30 @@ public class Mult extends BinaryExpression implements Expression {
     public Expression differentiate(String var) {
         Expression multiplier = super.getFirst();
         Expression multiplicand = super.getSecond();
-        Expression augend = Differentiation.fDerivativeMultipliedByG(multiplier, multiplicand, var);
-        Expression addend = Differentiation.fDerivativeMultipliedByG(multiplicand, multiplier, var);
+        Expression augend = Differentiation.derivativeOfFMultipliedByG(multiplier, multiplicand, var);
+        Expression addend = Differentiation.derivativeOfFMultipliedByG(multiplicand, multiplier, var);
         return new Plus(augend, addend);
     }
 
     @Override
-    public Expression simplifyAssumingThereAreVariables() {
-        Expression simplifiedMultiplier = super.getFirst().simplify();
-        Expression simplifiedMultiplicand = super.getSecond().simplify();
-        String simplifiedMultiplierString = simplifiedMultiplier.toString();
-        String simplifiedMultiplicandString = simplifiedMultiplicand.toString();
-        if (simplifiedMultiplierString.equals("0.0") || simplifiedMultiplicandString.equals("0.0")) {
-            return new Num(0.0);
+    public Expression simplify() {
+        try {
+            return new Num(this.evaluate());
+        } catch (Exception exception) {
+            Expression simplifiedMultiplier = super.getFirst().simplify();
+            Expression simplifiedMultiplicand = super.getSecond().simplify();
+            String simplifiedMultiplierString = simplifiedMultiplier.toString();
+            String simplifiedMultiplicandString = simplifiedMultiplicand.toString();
+            if (simplifiedMultiplierString.equals("0.0") || simplifiedMultiplicandString.equals("0.0")) {
+                return new Num(0.0);
+            }
+            if (simplifiedMultiplierString.equals("1.0")) {
+                return simplifiedMultiplicand;
+            }
+            if (simplifiedMultiplicandString.equals("1.0")) {
+                return simplifiedMultiplier;
+            }
+            return new Mult(simplifiedMultiplier, simplifiedMultiplicand);
         }
-        if (simplifiedMultiplierString.equals("1.0")) {
-            return simplifiedMultiplicand;
-        }
-        if (simplifiedMultiplicandString.equals("1.0")) {
-            return simplifiedMultiplier;
-        }
-        return new Mult(simplifiedMultiplier, simplifiedMultiplicand);
     }
 }

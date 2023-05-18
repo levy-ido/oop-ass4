@@ -31,7 +31,7 @@ public class ExpressionsTest {
         System.out.println(expression.evaluate(assignment));
         Expression differentiatedExpressionRelativeToX = expression.differentiate("x");
         System.out.println(differentiatedExpressionRelativeToX);
-        System.out.println(differentiatedExpressionRelativeToX.simplify());
         System.out.println(differentiatedExpressionRelativeToX.evaluate(assignment));
+        System.out.println(differentiatedExpressionRelativeToX.simplify());
     }
 }

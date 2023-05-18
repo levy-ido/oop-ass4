@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,22 +10,22 @@ public class Var implements Expression {
 
     /**
      * Constructs a new Var with the given name.
-     * @param name A String representing the new variable's name
+     * @param name A String representing the new Var name
      */
     public Var(String name) {
         this.name = name;
     }
     @Override
     public double evaluate(Map<String, Double> assignment) throws Exception {
-        if (!assignment.containsKey(this.name)) {
-            throw new Exception("The variable " + name + " is not assigned.");
+        if (assignment.containsKey(this.name)) {
+            return assignment.get(this.name);
         }
-        return assignment.get(this.name);
+        throw new Exception("The variable " + name + " is not assigned.");
     }
 
     @Override
     public double evaluate() throws Exception {
-        return this.evaluate(new HashMap<>());
+        return this.evaluate(Map.of());
     }
 
     @Override
@@ -58,12 +57,7 @@ public class Var implements Expression {
     }
 
     @Override
-    public Expression simplifyAssumingThereAreVariables() {
-        return this;
-    }
-
-    @Override
     public Expression simplify() {
-        return this.simplifyAssumingThereAreVariables();
+        return this;
     }
 }

@@ -18,6 +18,11 @@ public class Sin extends UnaryExpression implements Expression {
     }
 
     @Override
+    public double evaluate() throws Exception {
+        return this.evaluate(Map.of());
+    }
+
+    @Override
     public Expression assign(String var, Expression expression) {
         return new Sin(super.getOperand().assign(var, expression));
     }
@@ -36,11 +41,11 @@ public class Sin extends UnaryExpression implements Expression {
     }
 
     @Override
-    public Expression simplifyAssumingThereAreVariables() {
-        Expression simplifiedOperand = super.getOperand().simplify();
-        if (simplifiedOperand.toString().equals("0.0")) {
-            return new Num(0.0);
+    public Expression simplify() {
+        try {
+            return new Num(this.evaluate());
+        } catch (Exception exception) {
+            return new Sin(super.getOperand().simplify());
         }
-        return new Sin(simplifiedOperand);
     }
 }

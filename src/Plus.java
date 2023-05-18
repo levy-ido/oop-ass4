@@ -5,9 +5,9 @@ import java.util.Map;
  */
 public class Plus extends BinaryExpression implements Expression {
     /**
-     * Constructs a new Plus with the given operands.
-     * @param augend An Expression representing the new Plus's augend
-     * @param addend An Expression representing the new Plus's addend
+     * Constructs a new Plus with the given augend and addend.
+     * @param augend An Expression representing the new Plus augend
+     * @param addend An Expression representing the new Plus addend
      */
     public Plus(Expression augend, Expression addend) {
         super(augend, addend);
@@ -18,6 +18,11 @@ public class Plus extends BinaryExpression implements Expression {
         double augendEvaluation = super.getFirst().evaluate(assignment);
         double addendEvaluation = super.getSecond().evaluate(assignment);
         return augendEvaluation + addendEvaluation;
+    }
+
+    @Override
+    public double evaluate() throws Exception {
+        return this.evaluate(Map.of());
     }
 
     @Override
@@ -40,15 +45,19 @@ public class Plus extends BinaryExpression implements Expression {
     }
 
     @Override
-    public Expression simplifyAssumingThereAreVariables() {
-        Expression simplifiedAugend = super.getFirst().simplify();
-        Expression simplifiedAddend = super.getSecond().simplify();
-        if (simplifiedAugend.toString().equals("0.0")) {
-            return simplifiedAddend;
+    public Expression simplify() {
+        try {
+            return new Num(this.evaluate());
+        } catch (Exception exception) {
+            Expression simplifiedAugend = super.getFirst().simplify();
+            Expression simplifiedAddend = super.getSecond().simplify();
+            if (simplifiedAugend.toString().equals("0.0")) {
+                return simplifiedAddend;
+            }
+            if (simplifiedAddend.toString().equals("0.0")) {
+                return simplifiedAugend;
+            }
+            return new Plus(simplifiedAugend, simplifiedAddend);
         }
-        if (simplifiedAddend.toString().equals("0.0")) {
-            return simplifiedAugend;
-        }
-        return new Plus(simplifiedAugend, simplifiedAddend);
     }
 }
