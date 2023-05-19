@@ -1,3 +1,10 @@
+package rest;
+
+import binary.Mult;
+import binary.Plus;
+import binary.Pow;
+import unary.Sin;
+
 import java.util.Map;
 
 /**

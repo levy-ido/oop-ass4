@@ -1,3 +1,9 @@
+package binary;
+
+import rest.Expression;
+import rest.Num;
+import rest.Var;
+
 import java.util.Map;
 
 /**

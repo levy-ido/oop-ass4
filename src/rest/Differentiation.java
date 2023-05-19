@@ -1,3 +1,7 @@
+package rest;
+
+import binary.Mult;
+
 /**
  * A class containing auxiliary methods for differentiation.
  */

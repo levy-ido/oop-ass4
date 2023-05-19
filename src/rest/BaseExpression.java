@@ -1,3 +1,5 @@
+package rest;
+
 /**
  * I don't like this class.
  */
