@@ -35,10 +35,10 @@ public class Log extends BinaryExpression implements Expression {
     @Override
     public Expression differentiate(String var) {
         Expression antiLog = super.getSecond();
-        Expression oneDividedByAntiLog = new Div(new Num(1.0), antiLog);
         Expression naturalLogOfBase = Log.naturalLogOf(super.getFirst());
-        Expression antiLogDerivative = antiLog.differentiate(var);
-        return new Mult(new Mult(oneDividedByAntiLog, naturalLogOfBase), antiLogDerivative);
+        Expression multiplier = new Div(new Num(1.0), new Mult(antiLog, naturalLogOfBase));
+        Expression multiplicand = antiLog.differentiate(var);
+        return new Mult(multiplier, multiplicand);
     }
 
     @Override
